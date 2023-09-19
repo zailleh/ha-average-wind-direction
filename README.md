@@ -1,6 +1,6 @@
 *Please :star: this repo if you find it useful*
 
-# Average Sensor for Home Assistant
+# Average Wind Direction Sensor for Home Assistant
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
