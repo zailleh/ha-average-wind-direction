@@ -2,6 +2,12 @@
 
 # Average Wind Direction Sensor for Home Assistant
 
+## THIS REPO IS A FORK OF https://github.com/Limych/ha-average
+### See https://github.com/Limych/ha-average for more info/history
+**This repo is a fork of https://github.com/Limych/ha-average that changes the calculation of averages to handle a 0 - 359 wind degrees value, rather than temperature.**
+
+A special calculation is used to calculat the average vector (-180 through 180), and conver that back to 0 - 360 degrees. This is required for wind direction averages, as a standard mathematical average produces incorrect values, eg, if readings were `[350, 2, 12]` (mostly north as a cardinal direction) a numerical average would get `121` which equates to South-East. This fork's update calculates the average using vectors, see https://www.themathdoctors.org/averaging-angles/ for mor information.
+
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]](LICENSE.md)
