@@ -455,6 +455,7 @@ class AverageSensor(SensorEntity):
                 continue
 
             self._init_mode(state)
+            self.available_sources += 1
 
             if self._period is None:
                 # Get current state
@@ -511,10 +512,6 @@ class AverageSensor(SensorEntity):
                     if last_state is not None:
                         last_elapsed = max(1, math.trunc((end_ts - last_time) / 30))
                         values.extend([last_state] * last_elapsed)
-
-            if isinstance(value, numbers.Number):
-                values.append(value)
-                self.available_sources += 1
 
         if values:
             sum_of_sines = 0
