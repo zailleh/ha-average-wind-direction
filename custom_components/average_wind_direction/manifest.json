@@ -12,6 +12,7 @@
     ],
     "config_flow": false,
     "codeowners": [
+        "@zailleh",
         "@Limych"
     ],
     "requirements": [],
