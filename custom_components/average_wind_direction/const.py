@@ -11,7 +11,7 @@ from typing import Final
 from homeassistant.const import Platform
 
 NAME: Final = "Average Sensor"
-DOMAIN: Final = "average"
+DOMAIN: Final = "average_wind_direction"
 VERSION: Final = "2.3.1-alpha"
 ISSUE_URL: Final = "https://github.com/Limych/ha-average/issues"
 

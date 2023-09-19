@@ -456,13 +456,10 @@ class AverageSensor(SensorEntity):
 
             self._init_mode(state)
 
-            value = 0
-            elapsed = 0
-
             if self._period is None:
                 # Get current state
-                value = self._get_state_value(state)
-                _LOGGER.debug("Current state: %s", value)
+                values.append(self._get_state_value(state))
+                _LOGGER.debug("Current state: %s", values[-1])
 
             else:
                 # Get history between start and now
@@ -479,12 +476,12 @@ class AverageSensor(SensorEntity):
                     or history_list[entity_id] is None
                     or len(history_list[entity_id]) == 0
                 ):
-                    value = self._get_state_value(state)
+                    values.append(self._get_state_value(state))
                     _LOGGER.warning(
                         'Historical data not found for entity "%s". '
                         "Current state used: %s",
                         entity_id,
-                        value,
+                        values[-1],
                     )
                 else:
                     # Get the first state
@@ -492,6 +489,8 @@ class AverageSensor(SensorEntity):
                     _LOGGER.debug("Initial historical state: %s", item)
                     last_state = None
                     last_time = start_ts
+                    history_values = []
+
                     if item is not None and self._has_state(item.state):
                         last_state = self._get_state_value(item)
 
@@ -502,29 +501,30 @@ class AverageSensor(SensorEntity):
                         current_time = item.last_changed.timestamp()
 
                         if last_state is not None:
-                            last_elapsed = current_time - last_time
-                            value += last_state * last_elapsed
-                            elapsed += last_elapsed
+                            last_elapsed = max(1, math.trunc((current_time - last_time) / 30))
+                            values.extend([last_state] * last_elapsed)
 
                         last_state = current_state
                         last_time = current_time
 
                     # Count time elapsed between last history state and now
                     if last_state is not None:
-                        last_elapsed = end_ts - last_time
-                        value += last_state * last_elapsed
-                        elapsed += last_elapsed
-
-                    if elapsed:
-                        value /= elapsed
-                    _LOGGER.debug("Historical average state: %s", value)
+                        last_elapsed = max(1, math.trunc((end_ts - last_time) / 30))
+                        values.extend([last_state] * last_elapsed)
 
             if isinstance(value, numbers.Number):
                 values.append(value)
                 self.available_sources += 1
 
         if values:
-            self._attr_native_value = round(sum(values) / len(values), self._precision)
+            sum_of_sines = 0
+            sum_of_cosines = 0
+
+            for value in values:
+                sum_of_sines += math.sin(math.radians(value))
+                sum_of_cosines += math.cos(math.radians(value))
+
+            self._attr_native_value = math.degrees(math.atan(sum_of_sines / sum_of_cosines))
             if self._precision < 1:
                 self._attr_native_value = int(self._attr_native_value)
         else:

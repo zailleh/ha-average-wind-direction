@@ -1,6 +1,6 @@
 {
-    "domain": "average",
-    "name": "Average Sensor",
+    "domain": "average_wind_direction",
+    "name": "Average Wind Directon Sensor",
     "version": "2.3.1-alpha",
     "documentation": "https://github.com/Limych/ha-average",
     "issue_tracker": "https://github.com/Limych/ha-average/issues",
