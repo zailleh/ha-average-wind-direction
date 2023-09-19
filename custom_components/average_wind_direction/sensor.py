@@ -521,7 +521,9 @@ class AverageSensor(SensorEntity):
                 sum_of_sines += math.sin(math.radians(value))
                 sum_of_cosines += math.cos(math.radians(value))
 
-            self._attr_native_value = math.degrees(math.atan(sum_of_sines / sum_of_cosines))
+            degrees = math.degrees(math.atan2(sum_of_sines, sum_of_cosines))
+
+            self._attr_native_value = degrees if degrees >= 0 else 360 + degrees
             if self._precision < 1:
                 self._attr_native_value = int(self._attr_native_value)
         else:
